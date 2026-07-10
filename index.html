@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя</title>
+    <!-- Подключаем внешний файл стилей style.css -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="card">
+        <!-- Нажми на сердце, чтобы поменялся текст -->
+        <div class="main-heart" id="heartBtn">♥</div>
+        <h1 id="title">Для тебя</h1>
+        <p id="text">Ты делаешь этот мир чуточку ярче. Нажми на сердечко выше.</p>
+    </div>
+
+    <script>
+        // Интерактив: меняем текст при клике на сердце
+        const heartBtn = document.getElementById('heartBtn');
+        const title = document.getElementById('title');
+        const text = document.getElementById('text');
+
+        const messages = [
+            { t: "Моей любимой", m: "Просто хочу напомнить, как сильно ты мне дорога. Спасибо, что ты есть." },
+            { t: "Самой прекрасной", m: "Пусть этот день принесет тебе улыбку. Ты заслуживаешь всего лучшего." },
+            { t: "❤️", m: "Тут могла быть длинная цитата, но главное умещается в три слова: я тебя люблю." }
+        ];
+        
+        let currentMsg = 0;
+
+        heartBtn.addEventListener('click', () => {
+            title.textContent = messages[currentMsg].t;
+            text.textContent = messages[currentMsg].m;
+            currentMsg = (currentMsg + 1) % messages.length;
+            
+            // Эффект мини-взрыва при клике (сброс и перезапуск анимации)
+            heartBtn.style.animation = 'none';
+            setTimeout(() => heartBtn.style.animation = 'pulse 1.5s infinite', 10);
+        });
+
+        // Генератор летающих сердечек на фоне
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.innerHTML = '♥';
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's'; // от 4 до 7 секунд
+            
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+
+        // Создаем сердечко каждые 400мс
+        setInterval(createHeart, 400);
+    </script>
+</body>
+</html>
