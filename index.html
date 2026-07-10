@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Для тебя</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="card">
+        <div class="main-heart" id="heartBtn">♥</div>
+        <h1 id="title">Для тебя</h1>
+        <p id="text">Ты делаешь этот мир чуточку ярче. Нажми на сердечко выше.</p>
+    </div>
+
+    <script>
+        const heartBtn = document.getElementById('heartBtn');
+        const title = document.getElementById('title');
+        const text = document.getElementById('text');
+
+        const messages = [
+            { t: "Моей любимой", m: "Просто хочу напомнить, как сильно ты мне дорога. Спасибо, что ты есть." },
+            { t: "Самой прекрасной", m: "Пусть этот день принесет тебе улыбку. Ты заслуживаешь всего лучшего." },
+            { t: "❤️", m: "Тут могла быть длинная цитата, но главное умещается в три слова: я тебя люблю." }
+        ];
+        
+        let currentMsg = 0;
+
+        heartBtn.addEventListener('click', (e) => {
+            text.style.opacity = 0;
+            title.style.opacity = 0;
+            
+            setTimeout(() => {
+                title.textContent = messages[currentMsg].t;
+                text.textContent = messages[currentMsg].m;
+                title.style.opacity = 1;
+                text.style.opacity = 1;
+                currentMsg = (currentMsg + 1) % messages.length;
+            }, 200);
+            
+            createHeartBurst();
+        });
+
+        // Исправленный взрыв сердечек (теперь идеально позиционируется на любых экранах)
+        function createHeartBurst() {
+            const numHearts = 8; // Чуть меньше частиц для мобильной производительности
+            const rect = heartBtn.getBoundingClientRect();
+            
+            // Считаем центр кнопки относительно экрана
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < numHearts; i++) {
+                const p = document.createElement('div');
+                p.classList.add('burst-heart');
+                p.innerHTML = '♥';
+                
+                p.style.left = centerX + 'px';
+                p.style.top = centerY + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                // Чуть уменьшенный радиус разлета, чтобы не вылезать за края карточки на смартфонах
+                const distance = Math.random() * 50 + 30; 
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                p.style.setProperty('--tx', `${tx}px`);
+                p.style.setProperty('--ty', `${ty}px`);
+                
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 700);
+            }
+        }
+
+        // Фоновый генератор без скролла
+        function createBgHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.innerHTML = '♥';
+            
+            const startX = Math.random() * 100;
+            const startY = 105; 
+            const size = Math.random() * 14 + 8; // Слегка уменьшил фоновые сердечки
+
+            heart.style.left = startX + 'vw';
+            heart.style.top = startY + 'vh';
+            heart.style.fontSize = size + 'px';
+            
+            document.body.appendChild(heart);
+
+            let currentPos = startY;
+            const animationInterval = setInterval(() => {
+                currentPos -= 0.2; // Чуть быстрее летят вверх
+                heart.style.top = currentPos + 'vh';
+                heart.style.transform = `translateX(${Math.sin(currentPos / 4) * 8}px)`;
+
+                if (currentPos < -10) {
+                    clearInterval(animationInterval);
+                    heart.remove();
+                }
+            }, 16);
+        }
+
+        setInterval(createBgHeart, 900);
+    </script>
+</body>
+</html>
