@@ -107,4 +107,20 @@ p {
 /* Частицы от клика (взрыв сердечек) */
 .burst-heart {
     position: absolute;
-    color: #ff4b91
+    color: #ff4b91;
+    pointer-events: none;
+    z-index: 5;
+    font-size: 14px;
+    animation: burst 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes burst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
